@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "tsc",
     "build": "tsc",
-    "start": "nodemon --ext ts --exec ts-node src/hello-world.ts",
+    "start": "concurrently \"nodemon --ext ts --exec ts-node src/hello-world.ts\" \"graphql-codegen --config codegen.yml --watch\"",
     "codegen": "graphql-codegen --config codegen.yml"
   },
   "keywords": [],
@@ -25,6 +25,7 @@
     "@types/aws-lambda": "^8.10.25",
     "@types/node": "^12.0.0",
     "@types/ws": "^6.0.1",
+    "concurrently": "^4.1.0",
     "husky": "^2.2.0",
     "nodemon": "^1.19.0",
     "prettier": "^1.17.0",

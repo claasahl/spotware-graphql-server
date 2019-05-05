@@ -1,0 +1,24 @@
+type Subscription {
+  events: Events!
+}
+
+interface Event {
+  type: String!
+}
+union Events =
+    ConnectEvent
+  | ConnectedEvent
+  | DisconnectEvent
+  | DisconnectedEvent
+type ConnectEvent implements Event {
+  type: String!
+}
+type ConnectedEvent implements Event {
+  type: String!
+}
+type DisconnectEvent implements Event {
+  type: String!
+}
+type DisconnectedEvent implements Event {
+  type: String!
+}

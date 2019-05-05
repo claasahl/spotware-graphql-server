@@ -1,20 +1,18 @@
-import { GraphQLServer } from "graphql-yoga";
+import { GraphQLServer, PubSub } from "graphql-yoga";
 import fs from "fs";
 
-import { Resolvers } from "./generated/graphql";
-import { IResolvers } from "graphql-tools";
+import resolvers from "./resolvers";
+import Context from "./Context";
 
 const typeDefs = () => {
-  const buffer = fs.readFileSync("./src/schema/hello.graphql");
-  return [buffer.toString()];
+  const hello = fs.readFileSync("./src/schema/hello.graphql");
+  const subscription = fs.readFileSync("./src/schema/Subscription.graphql");
+  return [hello.toString(), subscription.toString()];
 };
 
-const resolvers: Resolvers & IResolvers = {
-  Query: {
-    hello: (_, { name }) => `Hello ${name || "World"}`
-  }
-};
-const server = new GraphQLServer({ typeDefs, resolvers: resolvers });
-server.start(options =>
+const pubsub = new PubSub();
+const context: Context = { pubsub };
+const server = new GraphQLServer({ typeDefs, resolvers, context });
+server.start({ debug: true }, options =>
   console.log(`server is listening on http://localhost:${options.port}`)
 );
