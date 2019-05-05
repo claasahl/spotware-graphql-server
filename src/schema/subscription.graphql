@@ -12,9 +12,13 @@ union Events =
   | DisconnectedEvent
 type ConnectEvent implements Event {
   type: String!
+  host: String!
+  port: Int!
 }
 type ConnectedEvent implements Event {
   type: String!
+  host: String!
+  port: Int!
 }
 type DisconnectEvent implements Event {
   type: String!

@@ -1,4 +1,5 @@
 import { Resolvers } from "../generated/graphql";
+import { IResolvers } from "graphql-tools";
 
 import ConnectEvent from "./ConnectEvent";
 import ConnectedEvent from "./ConnectedEvent";
@@ -8,7 +9,7 @@ import Event from "./Event";
 import Events from "./Events";
 import Query from "./Query";
 import Subscription from "./Subscription";
-import { IResolvers } from "graphql-tools";
+import Mutation from "./Mutation";
 
 const resolvers: Resolvers & IResolvers = {
   ConnectEvent,
@@ -18,6 +19,7 @@ const resolvers: Resolvers & IResolvers = {
   Event,
   Events,
   Query,
-  Subscription
+  Subscription,
+  Mutation
 };
 export default resolvers;

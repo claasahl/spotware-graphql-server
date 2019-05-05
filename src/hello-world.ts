@@ -7,7 +7,8 @@ import Context from "./Context";
 const typeDefs = () => {
   const hello = fs.readFileSync("./src/schema/hello.graphql");
   const subscription = fs.readFileSync("./src/schema/Subscription.graphql");
-  return [hello.toString(), subscription.toString()];
+  const mutation = fs.readFileSync("./src/schema/mutation.graphql");
+  return [hello.toString(), subscription.toString(), mutation.toString()];
 };
 
 const pubsub = new PubSub();
