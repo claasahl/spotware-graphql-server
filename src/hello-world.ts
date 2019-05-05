@@ -1,8 +1,8 @@
-import { GraphQLServer, PubSub } from "graphql-yoga";
+import { GraphQLServer } from "graphql-yoga";
 import fs from "fs";
 
 import resolvers from "./resolvers";
-import Context from "./Context";
+import { createContext } from "./Context";
 
 const typeDefs = () => {
   const hello = fs.readFileSync("./src/schema/hello.graphql");
@@ -11,9 +11,11 @@ const typeDefs = () => {
   return [hello.toString(), subscription.toString(), mutation.toString()];
 };
 
-const pubsub = new PubSub();
-const context: Context = { pubsub };
-const server = new GraphQLServer({ typeDefs, resolvers, context });
+const server = new GraphQLServer({
+  typeDefs,
+  resolvers,
+  context: createContext
+});
 server.start({ debug: true }, options =>
   console.log(`server is listening on http://localhost:${options.port}`)
 );
