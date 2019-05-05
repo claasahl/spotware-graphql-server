@@ -1,8 +1,18 @@
 import { GraphQLServer } from "graphql-yoga";
 import fs from "fs";
+import session from "express-session";
 
 import resolvers from "./resolvers";
 import { createContext } from "./Context";
+
+const TMP = session({
+  secret: "load from .env",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true
+  }
+});
 
 const typeDefs = () => {
   const hello = fs.readFileSync("./src/schema/hello.graphql");
@@ -16,6 +26,24 @@ const server = new GraphQLServer({
   resolvers,
   context: createContext
 });
-server.start({ debug: true }, options =>
-  console.log(`server is listening on http://localhost:${options.port}`)
+server.express.use(TMP);
+server.start(
+  {
+    debug: true,
+    subscriptions: {
+      onConnect: async (
+        _payload: any,
+        _websocket: any,
+        connectionContext: any
+      ) => {
+        return new Promise((resolve, _reject) => {
+          TMP(connectionContext.request, {} as any, () => {
+            resolve({ sessionID: connectionContext.request.sessionID });
+          });
+        });
+      }
+    }
+  },
+  options =>
+    console.log(`server is listening on http://localhost:${options.port}`)
 );
