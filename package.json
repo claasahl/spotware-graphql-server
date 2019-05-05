@@ -41,7 +41,7 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
-    "@claasahl/spotware-connect-api": "^0.4.0",
+    "@claasahl/spotware-adapter": "^0.4.8",
     "axios": "^0.18.0",
     "graphql-tag": "^2.10.1",
     "graphql-yoga": "^1.17.4",

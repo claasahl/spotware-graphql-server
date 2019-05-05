@@ -1,5 +1,5 @@
 import { ContextParameters } from "graphql-yoga/dist/types";
-import { SpotwareSocket, connect } from "@claasahl/spotware-connect-api";
+import { SpotwareSocket, connect } from "@claasahl/spotware-adapter";
 
 const gateways: Map<string, SpotwareSocket> = new Map();
 
