@@ -1,11 +1,9 @@
 import { GraphQLServer } from "graphql-yoga";
-const typeDefs = () => [
-  `
-  type Query {
-    hello(name: String): String!
-  }
-`
-];
+import fs from "fs";
+const typeDefs = () => {
+  const buffer = fs.readFileSync("./src/schema/hello.graphql");
+  return [buffer.toString()];
+};
 
 const resolvers = {
   Query: {
