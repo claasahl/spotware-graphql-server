@@ -1,21 +1,13 @@
 import { MutationResolvers } from "../generated/graphql";
 
 const resolvers: MutationResolvers = {
-  connect: (_parent, { host, port }, { pubsub }) => {
-    const event = {
-      type: "ConnectEvent",
-      host: host || "live.ctraderapi.com",
-      port: port || 5035
-    };
-    pubsub.publish("CHANGE ME", { events: event });
-    return event;
+  connect: (_parent, args, { clients }) => {
+    const host = args.host || "live.ctraderapi.com";
+    const port = args.port || 5035;
+    return clients.connect("CHANGE ME", host, port);
   },
-  disconnect: (_parent, _args, { pubsub }) => {
-    const event = {
-      type: "DisconnectEvent"
-    };
-    pubsub.publish("CHANGE ME", { events: event });
-    return event;
+  disconnect: (_parent, _args, { clients }) => {
+    return clients.disconnect("CHANGE ME");
   }
 };
 export default resolvers;

@@ -1,13 +1,13 @@
-import { PubSub } from "graphql-yoga";
 import { ContextParameters } from "graphql-yoga/dist/types";
 
+import * as clients from "./clients";
+
 export interface Context {
-  pubsub: PubSub;
+  clients: typeof clients;
 }
 
-const pubsub = new PubSub();
 export function createContext(_params: ContextParameters): Context {
-  return { pubsub };
+  return { clients };
 }
 
 export default Context;
