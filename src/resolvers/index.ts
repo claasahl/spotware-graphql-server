@@ -7,6 +7,8 @@ import DisconnectEvent from "./DisconnectEvent";
 import DisconnectedEvent from "./DisconnectedEvent";
 import Event from "./Event";
 import HeartbeatEvent from "./HeartbeatEvent";
+import OpenApiVersionReq from "./OpenApiVersionReq";
+import OpenApiVersionRes from "./OpenApiVersionRes";
 import SpotwareEvent from "./SpotwareEvent";
 import Events from "./Events";
 import Query from "./Query";
@@ -20,6 +22,8 @@ const resolvers: Resolvers & IResolvers = {
   DisconnectedEvent,
   Event,
   HeartbeatEvent,
+  OpenApiVersionReq,
+  OpenApiVersionRes,
   SpotwareEvent,
   Events,
   Query,

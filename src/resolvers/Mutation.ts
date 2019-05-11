@@ -11,6 +11,9 @@ const resolvers: MutationResolvers = {
   },
   heartbeatEvent: (_parent, _args, { sessionId, clients }) => {
     return clients.heartbeatEvent(sessionId);
+  },
+  openApiVersionReq: (_parent, _args, { sessionId, clients }) => {
+    return clients.openApiVersionReq(sessionId);
   }
 };
 export default resolvers;

@@ -7,7 +7,10 @@ const resolvers: EventsResolvers = {
       case "ConnectedEvent":
       case "DisconnectEvent":
       case "DisconnectedEvent":
+        return parent.type;
       case "HeartbeatEvent":
+      case "OpenApiVersionReq":
+      case "OpenApiVersionRes":
         return parent.type;
       default:
         return null;

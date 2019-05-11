@@ -6,6 +6,8 @@ const resolvers: SpotwareEventResolvers = {
   __resolveType: parent => {
     switch (parent.type) {
       case "HeartbeatEvent":
+      case "OpenApiVersionReq":
+      case "OpenApiVersionRes":
         return parent.type;
       default:
         return null;

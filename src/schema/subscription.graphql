@@ -12,6 +12,8 @@ union Events =
   | DisconnectEvent
   | DisconnectedEvent
   | HeartbeatEvent
+  | OpenApiVersionReq
+  | OpenApiVersionRes
 type ConnectEvent implements Event {
   session: String!
   type: String!
@@ -42,4 +44,15 @@ type HeartbeatEvent implements SpotwareEvent {
   session: String!
   type: String!
   clientMsgId: String
+}
+type OpenApiVersionReq implements SpotwareEvent {
+  session: String!
+  type: String!
+  clientMsgId: String
+}
+type OpenApiVersionRes implements SpotwareEvent {
+  session: String!
+  type: String!
+  clientMsgId: String
+  version: String!
 }
