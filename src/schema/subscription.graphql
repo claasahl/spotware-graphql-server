@@ -3,7 +3,7 @@ type Subscription {
 }
 
 interface Event {
-  SESSION: String!
+  session: String!
   TYPE: String!
 }
 union Events =
@@ -13,27 +13,27 @@ union Events =
   | DisconnectedEvent
   | SpotwareMessageEvent
 type ConnectEvent implements Event {
-  SESSION: String!
+  session: String!
   TYPE: String!
   host: String!
   port: Int!
 }
 type ConnectedEvent implements Event {
-  SESSION: String!
+  session: String!
   TYPE: String!
   host: String!
   port: Int!
 }
 type DisconnectEvent implements Event {
-  SESSION: String!
+  session: String!
   TYPE: String!
 }
 type DisconnectedEvent implements Event {
-  SESSION: String!
+  session: String!
   TYPE: String!
 }
 type SpotwareMessageEvent implements Event {
-  SESSION: String!
+  session: String!
   TYPE: String!
   payloadType: Int
   clientMsgId: String
