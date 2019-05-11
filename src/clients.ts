@@ -5,7 +5,11 @@ import {
   toProtoMessage,
   fromProtoMessage
 } from "@claasahl/spotware-adapter";
-import { IProtoMessage } from "@claasahl/spotware-adapter/build/spotware-messages";
+import {
+  IProtoMessage,
+  ProtoOAPayloadType,
+  ProtoPayloadType
+} from "@claasahl/spotware-adapter/build/spotware-messages";
 import {
   ConnectEvent,
   DisconnectEvent,
@@ -39,7 +43,7 @@ function publish(
     | OpenApiVersionReq
     | OpenApiVersionRes
 ) {
-  pubsub.publish(event.session, { events: event });
+  pubsub.publish(event.SESSION, { events: event });
 }
 
 function handleProtoMessage(
@@ -52,8 +56,8 @@ function handleProtoMessage(
       const msg = fromProtoMessage("PROTO_OA_VERSION_RES", message);
       publish({
         ...msg.message,
-        type: "OpenApiVersionRes",
-        session: id,
+        TYPE: "OpenApiVersionRes",
+        SESSION: id,
         clientMsgId: msg.clientMsgId
       });
   }
@@ -62,7 +66,7 @@ function handleProtoMessage(
 export function connect(id: string, host: string, port: number): ConnectEvent {
   if (!clients.has(id)) {
     const socket = spotwareConnect(port, host).on("secureConnect", () =>
-      publish({ type: "ConnectedEvent", host, port, session: id })
+      publish({ TYPE: "ConnectedEvent", host, port, SESSION: id })
     );
     const heartbeat = setInterval(
       () => heartbeatEvent(id),
@@ -71,13 +75,13 @@ export function connect(id: string, host: string, port: number): ConnectEvent {
     socket
       .on("end", () => clearInterval(heartbeat))
       .on("end", () => clients.delete(id))
-      .on("end", () => publish({ type: "DisconnectedEvent", session: id }))
+      .on("end", () => publish({ TYPE: "DisconnectedEvent", SESSION: id }))
       .on("PROTO_MESSAGE", (message, payloadType) =>
         handleProtoMessage(id, message, payloadType)
       );
     clients.set(id, { socket, host, port, heartbeat });
 
-    const event = { type: "ConnectEvent", host, port, session: id };
+    const event = { TYPE: "ConnectEvent", host, port, SESSION: id };
     publish(event);
     return event;
   }
@@ -89,7 +93,7 @@ export function disconnect(id: string): DisconnectEvent {
   if (wrapper) {
     wrapper.socket.end();
     clearInterval(wrapper.heartbeat);
-    const event = { type: "DisconnectEvent", session: id };
+    const event = { TYPE: "DisconnectEvent", SESSION: id };
     publish(event);
     return event;
   }
@@ -99,10 +103,16 @@ export function disconnect(id: string): DisconnectEvent {
 export function heartbeatEvent(id: string): HeartbeatEvent {
   const wrapper = clients.get(id);
   if (wrapper) {
+    const payloadType = ProtoPayloadType.HEARTBEAT_EVENT;
     const clientMsgId = CONFIG.clientMsgId();
     const message = toProtoMessage("HEARTBEAT_EVENT", {}, clientMsgId);
     writeProtoMessage(wrapper.socket, message);
-    const event = { type: "HeartbeatEvent", session: id, clientMsgId };
+    const event = {
+      TYPE: "HeartbeatEvent",
+      SESSION: id,
+      payloadType,
+      clientMsgId
+    };
     publish(event);
     return event;
   }
@@ -112,10 +122,16 @@ export function heartbeatEvent(id: string): HeartbeatEvent {
 export function openApiVersionReq(id: string): OpenApiVersionReq {
   const wrapper = clients.get(id);
   if (wrapper) {
+    const payloadType = ProtoOAPayloadType.PROTO_OA_VERSION_REQ;
     const clientMsgId = CONFIG.clientMsgId();
     const message = toProtoMessage("PROTO_OA_VERSION_REQ", {}, clientMsgId);
     writeProtoMessage(wrapper.socket, message);
-    const event = { type: "OpenApiVersionReq", session: id, clientMsgId };
+    const event = {
+      TYPE: "OpenApiVersionReq",
+      SESSION: id,
+      payloadType,
+      clientMsgId
+    };
     publish(event);
     return event;
   }

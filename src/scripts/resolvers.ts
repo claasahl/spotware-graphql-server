@@ -1,9 +1,7 @@
 import { types, IType } from "@claasahl/spotware-protobuf";
 import fs from "fs";
 
-function typeName(key: string): string {
-  return key.replace("ProtoOA", "OpenApi").replace("Proto", "");
-}
+import { typeName } from "./util";
 
 function resolver(key: string, value: IType): string {
   const fieldnames: string[] = [];
@@ -28,12 +26,26 @@ export default resolvers;
 
 const typeNames: string[] = [];
 types.commonMessages.types.forEach((value, key) => {
+  if (key !== "ProtoMessage") {
+    typeNames.push(typeName(key));
+    const filename = typeName(key) + ".ts";
+    const content = resolver(key, value);
+    fs.writeFileSync("./src/generated/resolvers/" + filename, content);
+  }
+});
+types.commonModelMessages.types.forEach((value, key) => {
   typeNames.push(typeName(key));
   const filename = typeName(key) + ".ts";
   const content = resolver(key, value);
   fs.writeFileSync("./src/generated/resolvers/" + filename, content);
 });
 types.messages.types.forEach((value, key) => {
+  typeNames.push(typeName(key));
+  const filename = typeName(key) + ".ts";
+  const content = resolver(key, value);
+  fs.writeFileSync("./src/generated/resolvers/" + filename, content);
+});
+types.modelMessages.types.forEach((value, key) => {
   typeNames.push(typeName(key));
   const filename = typeName(key) + ".ts";
   const content = resolver(key, value);

@@ -6,13 +6,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "npm run build",
-    "build": "npm run gen:resolvers && npm run codegen && tsc",
+    "build": "npm run generate && tsc",
     "dev": "concurrently \"nodemon --ext ts --exec ts-node src/hello-world.ts\" \"graphql-codegen --config codegen.yml --watch\"",
     "prestart": "npm run build",
     "start": "node build/hello-world.js",
-    "codegen": "graphql-codegen --config codegen.yml",
+    "generate": "npm run gen:graphql && npm run gen:resolvers && npm run gen:code",
+    "gen:graphql": "ts-node src/scripts/graphql.ts",
     "gen:resolvers": "ts-node src/scripts/resolvers.ts",
-    "postgen:resolvers": "prettier --write src/generated/resolvers/**"
+    "postgen:resolvers": "prettier --write src/generated/resolvers/**",
+    "gen:code": "graphql-codegen --config codegen.yml"
   },
   "keywords": [],
   "author": "",
