@@ -16,9 +16,27 @@ const TMP = session({
 
 const typeDefs = () => {
   const hello = fs.readFileSync("./src/schema/hello.graphql");
+  const commonMessages = fs.readFileSync(
+    "./src/generated/schema/commonMessages.graphql"
+  );
+  const commonModelMessages = fs.readFileSync(
+    "./src/generated/schema/commonModelMessages.graphql"
+  );
+  const messages = fs.readFileSync("./src/generated/schema/messages.graphql");
+  const modelMessages = fs.readFileSync(
+    "./src/generated/schema/modelMessages.graphql"
+  );
   const subscription = fs.readFileSync("./src/schema/Subscription.graphql");
   const mutation = fs.readFileSync("./src/schema/mutation.graphql");
-  return [hello.toString(), subscription.toString(), mutation.toString()];
+  return [
+    hello.toString(),
+    subscription.toString(),
+    mutation.toString(),
+    commonMessages.toString(),
+    commonModelMessages.toString(),
+    messages.toString(),
+    modelMessages.toString()
+  ];
 };
 
 const server = new GraphQLServer({

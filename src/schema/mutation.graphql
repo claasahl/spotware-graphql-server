@@ -1,6 +1,6 @@
 type Mutation {
   connect(host: String, port: Int): ConnectEvent!
   disconnect: DisconnectEvent!
-  heartbeatEvent: HeartbeatEvent!
-  openApiVersionReq: OpenApiVersionReq!
+  heartbeatEvent: SpotwareMessageEvent!
+  openApiVersionReq: SpotwareMessageEvent!
 }

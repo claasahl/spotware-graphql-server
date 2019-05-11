@@ -5,9 +5,9 @@ import ConnectEvent from "./ConnectEvent";
 import ConnectedEvent from "./ConnectedEvent";
 import DisconnectEvent from "./DisconnectEvent";
 import DisconnectedEvent from "./DisconnectedEvent";
-import Event from "./Event";
+import SpotwareMessageEvent from "./SpotwareMessageEvent";
 import SpotwareResolvers from "../generated/resolvers";
-import SpotwareEvent from "./SpotwareEvent";
+import Event from "./Event";
 import Events from "./Events";
 import Query from "./Query";
 import Subscription from "./Subscription";
@@ -18,9 +18,9 @@ const resolvers: Resolvers & IResolvers = {
   ConnectedEvent,
   DisconnectEvent,
   DisconnectedEvent,
-  Event,
+  SpotwareMessageEvent,
   ...SpotwareResolvers,
-  SpotwareEvent,
+  Event,
   Events,
   Query,
   Subscription,

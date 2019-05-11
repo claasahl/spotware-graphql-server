@@ -17,7 +17,8 @@ import {
   DisconnectedEvent,
   HeartbeatEvent,
   OpenApiVersionReq,
-  OpenApiVersionRes
+  OpenApiVersionRes,
+  SpotwareMessageEvent
 } from "./generated/graphql";
 import { PubSub } from "graphql-yoga";
 
@@ -39,9 +40,7 @@ function publish(
     | ConnectedEvent
     | DisconnectEvent
     | DisconnectedEvent
-    | HeartbeatEvent
-    | OpenApiVersionReq
-    | OpenApiVersionRes
+    | SpotwareMessageEvent
 ) {
   pubsub.publish(event.SESSION, { events: event });
 }
@@ -55,8 +54,9 @@ function handleProtoMessage(
     case "PROTO_OA_VERSION_RES":
       const msg = fromProtoMessage("PROTO_OA_VERSION_RES", message);
       publish({
+        ...message,
         ...msg.message,
-        TYPE: "OpenApiVersionRes",
+        TYPE: "SpotwareMessageEvent",
         SESSION: id,
         clientMsgId: msg.clientMsgId
       });
@@ -100,7 +100,7 @@ export function disconnect(id: string): DisconnectEvent {
   throw new Error(`cannot disconnect: no client for id ${id}`);
 }
 
-export function heartbeatEvent(id: string): HeartbeatEvent {
+export function heartbeatEvent(id: string): SpotwareMessageEvent {
   const wrapper = clients.get(id);
   if (wrapper) {
     const payloadType = ProtoPayloadType.HEARTBEAT_EVENT;
@@ -108,7 +108,7 @@ export function heartbeatEvent(id: string): HeartbeatEvent {
     const message = toProtoMessage("HEARTBEAT_EVENT", {}, clientMsgId);
     writeProtoMessage(wrapper.socket, message);
     const event = {
-      TYPE: "HeartbeatEvent",
+      TYPE: "SpotwareMessageEvent",
       SESSION: id,
       payloadType,
       clientMsgId
@@ -119,7 +119,7 @@ export function heartbeatEvent(id: string): HeartbeatEvent {
   throw new Error(`no client for id ${id}`);
 }
 
-export function openApiVersionReq(id: string): OpenApiVersionReq {
+export function openApiVersionReq(id: string): SpotwareMessageEvent {
   const wrapper = clients.get(id);
   if (wrapper) {
     const payloadType = ProtoOAPayloadType.PROTO_OA_VERSION_REQ;
@@ -127,7 +127,7 @@ export function openApiVersionReq(id: string): OpenApiVersionReq {
     const message = toProtoMessage("PROTO_OA_VERSION_REQ", {}, clientMsgId);
     writeProtoMessage(wrapper.socket, message);
     const event = {
-      TYPE: "OpenApiVersionReq",
+      TYPE: "SpotwareMessageEvent",
       SESSION: id,
       payloadType,
       clientMsgId

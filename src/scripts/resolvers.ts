@@ -11,10 +11,8 @@ function resolver(key: string, value: IType): string {
   const typename = typeName(key);
   return (
     `import { ${typename}Resolvers } from "../graphql";
-import SpotwareEventResolvers from "../../resolvers/SpotwareEvent";
 
 const resolvers: ${typename}Resolvers = {
-    ...SpotwareEventResolvers,
 ` +
     fieldnames.join(",\n") +
     `
@@ -26,12 +24,10 @@ export default resolvers;
 
 const typeNames: string[] = [];
 types.commonMessages.types.forEach((value, key) => {
-  if (key !== "ProtoMessage") {
-    typeNames.push(typeName(key));
-    const filename = typeName(key) + ".ts";
-    const content = resolver(key, value);
-    fs.writeFileSync("./src/generated/resolvers/" + filename, content);
-  }
+  typeNames.push(typeName(key));
+  const filename = typeName(key) + ".ts";
+  const content = resolver(key, value);
+  fs.writeFileSync("./src/generated/resolvers/" + filename, content);
 });
 types.commonModelMessages.types.forEach((value, key) => {
   typeNames.push(typeName(key));
