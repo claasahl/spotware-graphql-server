@@ -1,0 +1,69 @@
+# Write your query or mutation here
+subscription EVENTS {
+  events {
+    ... on ConnectEvent {
+      session
+      type
+      host
+      port
+    }
+    ... on ConnectedEvent {
+      session
+      type
+      host
+      port
+    }
+    ... on DisconnectEvent {
+      session
+      type
+    }
+    ... on DisconnectedEvent {
+      session
+      type
+    }
+    ... on HeartbeatEvent {
+      session
+      type
+      clientMsgId
+    }
+    ... on OpenApiVersionReq {
+      session
+      type
+      clientMsgId
+    }
+    ... on OpenApiVersionRes {
+      session
+      type
+      clientMsgId
+      version
+    }
+  }
+}
+mutation CONNECT {
+  connect {
+    session
+    type
+    host
+    port
+  }
+}
+mutation DISCONNECT {
+  disconnect {
+    session
+    type
+  }
+}
+mutation HEARTBEAT_EVENT {
+  heartbeatEvent {
+    session
+    type
+    clientMsgId
+  }
+}
+mutation VERSION_REQ {
+  openApiVersionReq {
+    session
+    type
+    clientMsgId
+  }
+}
