@@ -25,27 +25,12 @@ subscription EVENTS {
       type
       __typename
     }
-    ... on HeartbeatEvent {
+    ... on SpotwareMessageEvent {
       session
       type
       __typename
       payloadType
       clientMsgId
-    }
-    ... on OpenApiVersionReq {
-      session
-      type
-      __typename
-      payloadType
-      clientMsgId
-    }
-    ... on OpenApiVersionRes {
-      session
-      type
-      __typename
-      payloadType
-      clientMsgId
-      version
     }
   }
 }
