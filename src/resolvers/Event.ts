@@ -12,7 +12,7 @@ const resolvers: EventResolvers = {
         return null;
     }
   },
-  session: () => "",
-  type: () => "Event"
+  session: parent => parent.session,
+  type: parent => parent.type
 };
 export default resolvers;

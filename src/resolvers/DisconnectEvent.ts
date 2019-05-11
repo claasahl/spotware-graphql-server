@@ -1,7 +1,7 @@
 import { DisconnectEventResolvers } from "../generated/graphql";
+import EventResolvers from "./Event";
 
 const resolvers: DisconnectEventResolvers = {
-  session: parent => parent.session,
-  type: () => "DisconnectEvent"
+  ...EventResolvers
 };
 export default resolvers;

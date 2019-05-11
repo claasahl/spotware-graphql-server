@@ -1,8 +1,8 @@
 import { ConnectEventResolvers } from "../generated/graphql";
+import EventResolvers from "./Event";
 
 const resolvers: ConnectEventResolvers = {
-  session: parent => parent.session,
-  type: () => "ConnectEvent",
+  ...EventResolvers,
   host: parent => parent.host,
   port: parent => parent.port
 };
