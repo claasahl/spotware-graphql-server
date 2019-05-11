@@ -7,6 +7,7 @@ const resolvers: EventsResolvers = {
       case "ConnectedEvent":
       case "DisconnectEvent":
       case "DisconnectedEvent":
+      case "HeartbeatEvent":
         return parent.type;
       default:
         return null;

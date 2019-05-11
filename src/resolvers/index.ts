@@ -6,6 +6,8 @@ import ConnectedEvent from "./ConnectedEvent";
 import DisconnectEvent from "./DisconnectEvent";
 import DisconnectedEvent from "./DisconnectedEvent";
 import Event from "./Event";
+import HeartbeatEvent from "./HeartbeatEvent";
+import SpotwareEvent from "./SpotwareEvent";
 import Events from "./Events";
 import Query from "./Query";
 import Subscription from "./Subscription";
@@ -17,6 +19,8 @@ const resolvers: Resolvers & IResolvers = {
   DisconnectEvent,
   DisconnectedEvent,
   Event,
+  HeartbeatEvent,
+  SpotwareEvent,
   Events,
   Query,
   Subscription,

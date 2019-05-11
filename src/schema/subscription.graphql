@@ -11,6 +11,7 @@ union Events =
   | ConnectedEvent
   | DisconnectEvent
   | DisconnectedEvent
+  | HeartbeatEvent
 type ConnectEvent implements Event {
   session: String!
   type: String!
@@ -30,4 +31,15 @@ type DisconnectEvent implements Event {
 type DisconnectedEvent implements Event {
   session: String!
   type: String!
+}
+
+interface SpotwareEvent {
+  session: String!
+  type: String!
+  clientMsgId: String
+}
+type HeartbeatEvent implements SpotwareEvent {
+  session: String!
+  type: String!
+  clientMsgId: String
 }

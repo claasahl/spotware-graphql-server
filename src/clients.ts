@@ -1,6 +1,8 @@
 import {
   SpotwareSocket,
-  connect as spotwareConnect
+  connect as spotwareConnect,
+  writeProtoMessage,
+  toProtoMessage
 } from "@claasahl/spotware-adapter";
 import {
   ConnectEvent,
@@ -10,10 +12,13 @@ import {
 } from "./generated/graphql";
 import { PubSub } from "graphql-yoga";
 
+import CONFIG from "./config";
+
 interface Wrapper {
   socket: SpotwareSocket;
   host: string;
   port: number;
+  heartbeat: NodeJS.Timeout;
 }
 
 export const pubsub = new PubSub();
@@ -27,13 +32,27 @@ function publish(
 
 export function connect(id: string, host: string, port: number): ConnectEvent {
   if (!clients.has(id)) {
-    const socket = spotwareConnect(port, host)
-      .on("end", () => publish({ type: "DisconnectedEvent", session: id }))
+    const socket = spotwareConnect(port, host).on("secureConnect", () =>
+      publish({ type: "ConnectedEvent", host, port, session: id })
+    );
+    const heartbeat = setInterval(
+      () =>
+        writeProtoMessage(
+          socket,
+          toProtoMessage("HEARTBEAT_EVENT", {}, new Date().toISOString())
+        ),
+      CONFIG.heartbeatInterval
+    );
+    socket
+      .on("end", () => clearInterval(heartbeat))
       .on("end", () => clients.delete(id))
-      .on("secureConnect", () =>
-        publish({ type: "ConnectedEvent", host, port, session: id })
-      );
-    clients.set(id, { socket, host, port });
+      .on("end", () => publish({ type: "DisconnectedEvent", session: id }))
+      .on("PROTO_MESSAGE", (message, payloadType) => {
+        if (payloadType === "HEARTBEAT_EVENT") {
+          publish({ type: "HeartbeatEvent", session: id, ...message });
+        }
+      });
+    clients.set(id, { socket, host, port, heartbeat });
 
     const event = { type: "ConnectEvent", host, port, session: id };
     publish(event);
@@ -46,6 +65,7 @@ export function disconnect(id: string): DisconnectEvent {
   const wrapper = clients.get(id);
   if (wrapper) {
     wrapper.socket.end();
+    clearInterval(wrapper.heartbeat);
     const event = { type: "DisconnectEvent", session: id };
     publish(event);
     return event;
