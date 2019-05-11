@@ -4,6 +4,7 @@ import session from "express-session";
 
 import resolvers from "./resolvers";
 import { createContext } from "./Context";
+import defaultQuery from "./defaultPlaygroundQuery";
 
 const TMP = session({
   secret: "load from .env",
