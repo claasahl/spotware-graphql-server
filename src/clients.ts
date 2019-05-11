@@ -37,22 +37,13 @@ export function connect(id: string, host: string, port: number): ConnectEvent {
       publish({ type: "ConnectedEvent", host, port, session: id })
     );
     const heartbeat = setInterval(
-      () =>
-        writeProtoMessage(
-          socket,
-          toProtoMessage("HEARTBEAT_EVENT", {}, CONFIG.clientMsgId())
-        ),
+      () => heartbeatEvent(id),
       CONFIG.heartbeatInterval
     );
     socket
       .on("end", () => clearInterval(heartbeat))
       .on("end", () => clients.delete(id))
-      .on("end", () => publish({ type: "DisconnectedEvent", session: id }))
-      .on("PROTO_MESSAGE", (message, payloadType) => {
-        if (payloadType === "HEARTBEAT_EVENT") {
-          publish({ type: "HeartbeatEvent", session: id, ...message });
-        }
-      });
+      .on("end", () => publish({ type: "DisconnectedEvent", session: id }));
     clients.set(id, { socket, host, port, heartbeat });
 
     const event = { type: "ConnectEvent", host, port, session: id };
