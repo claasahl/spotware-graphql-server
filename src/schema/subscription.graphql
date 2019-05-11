@@ -3,6 +3,7 @@ type Subscription {
 }
 
 interface Event {
+  session: String!
   type: String!
 }
 union Events =
@@ -11,18 +12,22 @@ union Events =
   | DisconnectEvent
   | DisconnectedEvent
 type ConnectEvent implements Event {
+  session: String!
   type: String!
   host: String!
   port: Int!
 }
 type ConnectedEvent implements Event {
+  session: String!
   type: String!
   host: String!
   port: Int!
 }
 type DisconnectEvent implements Event {
+  session: String!
   type: String!
 }
 type DisconnectedEvent implements Event {
+  session: String!
   type: String!
 }
