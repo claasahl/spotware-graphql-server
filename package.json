@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "npm run build",
-    "build": "npm run codegen && tsc",
+    "build": "npm run gen:resolvers && npm run codegen && tsc",
     "dev": "concurrently \"nodemon --ext ts --exec ts-node src/hello-world.ts\" \"graphql-codegen --config codegen.yml --watch\"",
     "prestart": "npm run build",
     "start": "node build/hello-world.js",

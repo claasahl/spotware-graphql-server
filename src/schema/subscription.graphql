@@ -38,21 +38,25 @@ type DisconnectedEvent implements Event {
 interface SpotwareEvent {
   session: String!
   type: String!
+  payloadType: Int
   clientMsgId: String
 }
 type HeartbeatEvent implements SpotwareEvent {
   session: String!
   type: String!
+  payloadType: Int
   clientMsgId: String
 }
 type OpenApiVersionReq implements SpotwareEvent {
   session: String!
   type: String!
+  payloadType: Int
   clientMsgId: String
 }
 type OpenApiVersionRes implements SpotwareEvent {
   session: String!
   type: String!
+  payloadType: Int
   clientMsgId: String
   version: String!
 }

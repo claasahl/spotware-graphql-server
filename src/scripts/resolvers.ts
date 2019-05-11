@@ -8,9 +8,7 @@ function typeName(key: string): string {
 function resolver(key: string, value: IType): string {
   const fieldnames: string[] = [];
   for (const fieldname in value.fields) {
-    if (fieldname !== "payloadType") {
-      fieldnames.push(`    ${fieldname}: parent => parent.${fieldname}`);
-    }
+    fieldnames.push(`    ${fieldname}: parent => parent.${fieldname}`);
   }
   const typename = typeName(key);
   return (
