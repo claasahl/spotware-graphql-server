@@ -8,7 +8,8 @@ import {
   ConnectEvent,
   DisconnectEvent,
   ConnectedEvent,
-  DisconnectedEvent
+  DisconnectedEvent,
+  HeartbeatEvent
 } from "./generated/graphql";
 import { PubSub } from "graphql-yoga";
 
@@ -39,7 +40,7 @@ export function connect(id: string, host: string, port: number): ConnectEvent {
       () =>
         writeProtoMessage(
           socket,
-          toProtoMessage("HEARTBEAT_EVENT", {}, new Date().toISOString())
+          toProtoMessage("HEARTBEAT_EVENT", {}, CONFIG.clientMsgId())
         ),
       CONFIG.heartbeatInterval
     );
@@ -71,4 +72,17 @@ export function disconnect(id: string): DisconnectEvent {
     return event;
   }
   throw new Error(`cannot disconnect: no client for id ${id}`);
+}
+
+export function heartbeatEvent(id: string): HeartbeatEvent {
+  const wrapper = clients.get(id);
+  if (wrapper) {
+    const clientMsgId = CONFIG.clientMsgId();
+    const message = toProtoMessage("HEARTBEAT_EVENT", {}, clientMsgId);
+    writeProtoMessage(wrapper.socket, message);
+    const event = { type: "HeartbeatEvent", session: id, clientMsgId };
+    publish(event);
+    return event;
+  }
+  throw new Error(`no client for id ${id}`);
 }
