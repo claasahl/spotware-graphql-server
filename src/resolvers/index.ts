@@ -10,6 +10,7 @@ import SpotwareResolvers from "../generated/resolvers";
 import Event from "./Event";
 import Events from "./Events";
 import Query from "./Query";
+import Payload from "./Payload";
 import Subscription from "./Subscription";
 import Mutation from "./Mutation";
 
@@ -23,6 +24,7 @@ const resolvers: Resolvers & IResolvers = {
   Event,
   Events,
   Query,
+  Payload,
   Subscription,
   Mutation
 };

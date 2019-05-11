@@ -15,10 +15,8 @@ import {
   DisconnectEvent,
   ConnectedEvent,
   DisconnectedEvent,
-  HeartbeatEvent,
-  OpenApiVersionReq,
-  OpenApiVersionRes,
-  SpotwareMessageEvent
+  SpotwareMessageEvent,
+  HeartbeatEvent
 } from "./generated/graphql";
 import { PubSub } from "graphql-yoga";
 
@@ -55,9 +53,9 @@ function handleProtoMessage(
       const msg = fromProtoMessage("PROTO_OA_VERSION_RES", message);
       publish({
         ...message,
-        ...msg.message,
         type: "SpotwareMessageEvent",
         session: id,
+        payload: msg.message,
         clientMsgId: msg.clientMsgId
       });
   }
@@ -104,13 +102,15 @@ export function heartbeatEvent(id: string): SpotwareMessageEvent {
   const wrapper = clients.get(id);
   if (wrapper) {
     const payloadType = ProtoPayloadType.HEARTBEAT_EVENT;
+    const payload = { payloadType: null };
     const clientMsgId = CONFIG.clientMsgId();
-    const message = toProtoMessage("HEARTBEAT_EVENT", {}, clientMsgId);
+    const message = toProtoMessage("HEARTBEAT_EVENT", payload, clientMsgId);
     writeProtoMessage(wrapper.socket, message);
     const event = {
       type: "SpotwareMessageEvent",
       session: id,
       payloadType,
+      payload,
       clientMsgId
     };
     publish(event);
@@ -123,13 +123,19 @@ export function openApiVersionReq(id: string): SpotwareMessageEvent {
   const wrapper = clients.get(id);
   if (wrapper) {
     const payloadType = ProtoOAPayloadType.PROTO_OA_VERSION_REQ;
+    const payload = { payloadType: null };
     const clientMsgId = CONFIG.clientMsgId();
-    const message = toProtoMessage("PROTO_OA_VERSION_REQ", {}, clientMsgId);
+    const message = toProtoMessage(
+      "PROTO_OA_VERSION_REQ",
+      payload,
+      clientMsgId
+    );
     writeProtoMessage(wrapper.socket, message);
     const event = {
       type: "SpotwareMessageEvent",
       session: id,
       payloadType,
+      payload,
       clientMsgId
     };
     publish(event);

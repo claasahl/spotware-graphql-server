@@ -12,6 +12,7 @@ union Events =
   | DisconnectEvent
   | DisconnectedEvent
   | SpotwareMessageEvent
+union Payload = HeartbeatEvent | OpenApiVersionReq | OpenApiVersionRes
 type ConnectEvent implements Event {
   session: String!
   type: String!
@@ -36,5 +37,6 @@ type SpotwareMessageEvent implements Event {
   session: String!
   type: String!
   payloadType: Int
+  payload: Payload
   clientMsgId: String
 }

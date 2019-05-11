@@ -30,6 +30,13 @@ subscription EVENTS {
       type
       __typename
       payloadType
+      payload {
+        __typename
+        ... on OpenApiVersionRes {
+          payloadType
+          version
+        }
+      }
       clientMsgId
     }
   }
