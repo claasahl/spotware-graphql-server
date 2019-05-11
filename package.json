@@ -5,9 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "tsc",
-    "build": "tsc",
-    "start": "concurrently \"nodemon --ext ts --exec ts-node src/hello-world.ts\" \"graphql-codegen --config codegen.yml --watch\"",
+    "prepare": "npm run build",
+    "build": "npm run codegen && tsc",
+    "dev": "concurrently \"nodemon --ext ts --exec ts-node src/hello-world.ts\" \"graphql-codegen --config codegen.yml --watch\"",
+    "prestart": "npm run build",
+    "start": "node build/hello-world.js",
     "codegen": "graphql-codegen --config codegen.yml"
   },
   "keywords": [],
