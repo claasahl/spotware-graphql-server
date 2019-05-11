@@ -4,7 +4,7 @@ type Subscription {
 
 interface Event {
   session: String!
-  TYPE: String!
+  type: String!
 }
 union Events =
     ConnectEvent
@@ -14,27 +14,27 @@ union Events =
   | SpotwareMessageEvent
 type ConnectEvent implements Event {
   session: String!
-  TYPE: String!
+  type: String!
   host: String!
   port: Int!
 }
 type ConnectedEvent implements Event {
   session: String!
-  TYPE: String!
+  type: String!
   host: String!
   port: Int!
 }
 type DisconnectEvent implements Event {
   session: String!
-  TYPE: String!
+  type: String!
 }
 type DisconnectedEvent implements Event {
   session: String!
-  TYPE: String!
+  type: String!
 }
 type SpotwareMessageEvent implements Event {
   session: String!
-  TYPE: String!
+  type: String!
   payloadType: Int
   clientMsgId: String
 }

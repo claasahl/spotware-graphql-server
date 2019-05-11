@@ -3,39 +3,39 @@ subscription EVENTS {
   events {
     ... on ConnectEvent {
       session
-      TYPE
+      type
       host
       port
     }
     ... on ConnectedEvent {
       session
-      TYPE
+      type
       host
       port
     }
     ... on DisconnectEvent {
       session
-      TYPE
+      type
     }
     ... on DisconnectedEvent {
       session
-      TYPE
+      type
     }
     ... on HeartbeatEvent {
       session
-      TYPE
+      type
       payloadType
       clientMsgId
     }
     ... on OpenApiVersionReq {
       session
-      TYPE
+      type
       payloadType
       clientMsgId
     }
     ... on OpenApiVersionRes {
       session
-      TYPE
+      type
       payloadType
       clientMsgId
       version
@@ -45,7 +45,7 @@ subscription EVENTS {
 mutation CONNECT {
   connect {
     session
-    TYPE
+    type
     host
     port
   }
@@ -53,13 +53,13 @@ mutation CONNECT {
 mutation DISCONNECT {
   disconnect {
     session
-    TYPE
+    type
   }
 }
 mutation HEARTBEAT_EVENT {
   heartbeatEvent {
     session
-    TYPE
+    type
     payloadType
     clientMsgId
   }
@@ -67,7 +67,7 @@ mutation HEARTBEAT_EVENT {
 mutation VERSION_REQ {
   openApiVersionReq {
     session
-    TYPE
+    type
     payloadType
     clientMsgId
   }

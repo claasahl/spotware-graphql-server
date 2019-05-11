@@ -2,17 +2,17 @@ import { EventResolvers } from "../generated/graphql";
 
 const resolvers: EventResolvers = {
   __resolveType: parent => {
-    switch (parent.TYPE) {
+    switch (parent.type) {
       case "ConnectEvent":
       case "ConnectedEvent":
       case "DisconnectEvent":
       case "DisconnectedEvent":
-        return parent.TYPE;
+        return parent.type;
       default:
         return null;
     }
   },
   session: parent => parent.session,
-  TYPE: parent => parent.TYPE
+  type: parent => parent.type
 };
 export default resolvers;
