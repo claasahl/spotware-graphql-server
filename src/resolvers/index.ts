@@ -27,5 +27,5 @@ const resolvers: Resolvers & IResolvers = {
   Payload,
   Subscription,
   Mutation
-};
+} as any;
 export default resolvers;

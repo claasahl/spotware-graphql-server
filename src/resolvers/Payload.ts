@@ -1,9 +1,6 @@
 import { PayloadResolvers } from "../generated/graphql";
+import { Omit } from "../types";
 
-const resolvers: PayloadResolvers = {
-  __resolveType: parent => {
-    return "OpenApiVersionRes";
-  }
-};
+const resolvers: Omit<PayloadResolvers, "__resolveType"> = {};
 
 export default resolvers;

@@ -1,17 +1,7 @@
 import { EventResolvers } from "../generated/graphql";
+import { Omit } from "../types";
 
-const resolvers: EventResolvers = {
-  __resolveType: parent => {
-    switch (parent.type) {
-      case "ConnectEvent":
-      case "ConnectedEvent":
-      case "DisconnectEvent":
-      case "DisconnectedEvent":
-        return parent.type;
-      default:
-        return null;
-    }
-  },
+const resolvers: Omit<EventResolvers, "__resolveType"> = {
   session: parent => parent.session,
   type: parent => parent.type
 };
