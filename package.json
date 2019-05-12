@@ -10,6 +10,7 @@
     "dev": "concurrently \"nodemon --ext ts --exec ts-node src/hello-world.ts\" \"graphql-codegen --config codegen.yml --watch\"",
     "prestart": "npm run build",
     "start": "node build/hello-world.js",
+    "pregenerate": "shx rm -Rf src/generated",
     "generate": "npm run gen:graphql && npm run gen:resolvers && npm run gen:code",
     "pregen:graphql": "shx rm -Rf src/generated/schema && shx mkdir -p src/generated/schema",
     "gen:graphql": "ts-node src/scripts/graphql.ts",
