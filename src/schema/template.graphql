@@ -1,34 +1,30 @@
 # Write your query or mutation here
 subscription EVENTS {
   events {
+    __typename
     ... on ConnectEvent {
       session
       type
-      __typename
       host
       port
     }
     ... on ConnectedEvent {
       session
       type
-      __typename
       host
       port
     }
     ... on DisconnectEvent {
       session
       type
-      __typename
     }
     ... on DisconnectedEvent {
       session
       type
-      __typename
     }
     ... on SpotwareMessageEvent {
       session
       type
-      __typename
       payloadType
       payload {
         __typename

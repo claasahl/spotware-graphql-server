@@ -1,11 +1,6 @@
 type Subscription {
   events: Events!
 }
-
-interface Event {
-  session: String!
-  type: String!
-}
 union Events =
     ConnectEvent
   | ConnectedEvent
@@ -13,29 +8,55 @@ union Events =
   | DisconnectedEvent
   | SpotwareMessageEvent
 union Payload = HeartbeatEvent | OpenApiVersionReq | OpenApiVersionRes
+union EventTypes =
+    ConnectEventType
+  | ConnectedEventType
+  | DisconnectEventType
+  | DisconnectedEventType
+  | SpotwareMessageEventType
+
+interface Event {
+  session: String!
+  type: EventTypes!
+}
+enum ConnectEventType {
+  ConnectEvent
+}
 type ConnectEvent implements Event {
   session: String!
-  type: String!
+  type: ConnectEventType!
   host: String!
   port: Int!
+}
+enum ConnectedEventType {
+  ConnectedEvent
 }
 type ConnectedEvent implements Event {
   session: String!
-  type: String!
+  type: ConnectedEventType!
   host: String!
   port: Int!
 }
+enum DisconnectEventType {
+  DisconnectEvent
+}
 type DisconnectEvent implements Event {
   session: String!
-  type: String!
+  type: DisconnectEventType!
+}
+enum DisconnectedEventType {
+  DisconnectedEvent
 }
 type DisconnectedEvent implements Event {
   session: String!
-  type: String!
+  type: DisconnectedEventType!
+}
+enum SpotwareMessageEventType {
+  SpotwareMessageEvent
 }
 type SpotwareMessageEvent implements Event {
   session: String!
-  type: String!
+  type: SpotwareMessageEventType!
   payloadType: Int
   payload: Payload
   clientMsgId: String

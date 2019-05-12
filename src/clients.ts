@@ -13,10 +13,8 @@ import {
 import {
   ConnectEvent,
   DisconnectEvent,
-  ConnectedEvent,
-  DisconnectedEvent,
   SpotwareMessageEvent,
-  HeartbeatEvent
+  Events
 } from "./generated/graphql";
 import { PubSub } from "graphql-yoga";
 
@@ -32,14 +30,7 @@ interface Wrapper {
 export const pubsub = new PubSub();
 const clients = new Map<string, Wrapper>();
 
-function publish(
-  event:
-    | ConnectEvent
-    | ConnectedEvent
-    | DisconnectEvent
-    | DisconnectedEvent
-    | SpotwareMessageEvent
-) {
+function publish(event: Events) {
   pubsub.publish(event.session, { events: event });
 }
 
@@ -51,13 +42,14 @@ function handleProtoMessage(
   switch (payloadType) {
     case "PROTO_OA_VERSION_RES":
       const msg = fromProtoMessage("PROTO_OA_VERSION_RES", message);
-      publish({
-        ...message,
+      const event: SpotwareMessageEvent = {
         type: "SpotwareMessageEvent",
         session: id,
-        payload: msg.message,
+        payloadType: message.payloadType,
+        payload: undefined,
         clientMsgId: msg.clientMsgId
-      });
+      };
+      publish(event);
   }
 }
 
@@ -79,7 +71,12 @@ export function connect(id: string, host: string, port: number): ConnectEvent {
       );
     clients.set(id, { socket, host, port, heartbeat });
 
-    const event = { type: "ConnectEvent", host, port, session: id };
+    const event: ConnectEvent = {
+      type: "ConnectEvent",
+      host,
+      port,
+      session: id
+    };
     publish(event);
     return event;
   }
@@ -91,7 +88,7 @@ export function disconnect(id: string): DisconnectEvent {
   if (wrapper) {
     wrapper.socket.end();
     clearInterval(wrapper.heartbeat);
-    const event = { type: "DisconnectEvent", session: id };
+    const event: DisconnectEvent = { type: "DisconnectEvent", session: id };
     publish(event);
     return event;
   }
@@ -106,7 +103,7 @@ export function heartbeatEvent(id: string): SpotwareMessageEvent {
     const clientMsgId = CONFIG.clientMsgId();
     const message = toProtoMessage("HEARTBEAT_EVENT", payload, clientMsgId);
     writeProtoMessage(wrapper.socket, message);
-    const event = {
+    const event: SpotwareMessageEvent = {
       type: "SpotwareMessageEvent",
       session: id,
       payloadType,
@@ -131,7 +128,7 @@ export function openApiVersionReq(id: string): SpotwareMessageEvent {
       clientMsgId
     );
     writeProtoMessage(wrapper.socket, message);
-    const event = {
+    const event: SpotwareMessageEvent = {
       type: "SpotwareMessageEvent",
       session: id,
       payloadType,

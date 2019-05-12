@@ -9,3 +9,6 @@ generates:
       avoidOptionals: true
       contextType: ../Context#Context
       namingConvention: keep
+      immutableTypes: true
+      enumsAsTypes: true
+      maybeValue: T | null | undefined

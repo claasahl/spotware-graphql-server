@@ -1,6 +1,7 @@
 import { PayloadResolvers } from "../generated/graphql";
-import { Omit } from "../types";
 
-const resolvers: Omit<PayloadResolvers, "__resolveType"> = {};
+const resolvers: PayloadResolvers = {
+  __resolveType: () => "HeartbeatEvent"
+};
 
 export default resolvers;
