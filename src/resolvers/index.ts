@@ -8,7 +8,6 @@ import DisconnectedEvent from "./DisconnectedEvent";
 import SpotwareMessageEvent from "./SpotwareMessageEvent";
 import SpotwareResolvers from "../generated/resolvers";
 import Event from "./Event";
-import EventTypes from "./EventTypes";
 import Events from "./Events";
 import Query from "./Query";
 import Payload from "./Payload";
@@ -23,7 +22,6 @@ const resolvers: Resolvers & IResolvers = {
   SpotwareMessageEvent,
   ...SpotwareResolvers,
   Event,
-  EventTypes,
   Events,
   Query,
   Payload,

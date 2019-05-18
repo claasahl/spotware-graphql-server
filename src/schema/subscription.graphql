@@ -8,16 +8,9 @@ union Events =
   | DisconnectedEvent
   | SpotwareMessageEvent
 union Payload = HeartbeatEvent | OpenApiVersionReq | OpenApiVersionRes
-union EventTypes =
-    ConnectEventType
-  | ConnectedEventType
-  | DisconnectEventType
-  | DisconnectedEventType
-  | SpotwareMessageEventType
 
 interface Event {
   session: String!
-  type: EventTypes!
 }
 enum ConnectEventType {
   ConnectEvent
