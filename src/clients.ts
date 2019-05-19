@@ -43,14 +43,15 @@ function handleProtoMessage(
 ): void {
   switch (payloadType) {
     case "PROTO_OA_VERSION_RES":
-      const msg = fromProtoMessage("PROTO_OA_VERSION_RES", message);
+      const eventName = "PROTO_OA_VERSION_RES";
+      const msg = fromProtoMessage(eventName, message);
       const event: SpotwareMessageEvent = {
         type: "SpotwareMessageEvent",
         session: id,
         payloadType: message.payloadType,
         payload: {
           ...msg.message,
-          payloadType: ProtoOAPayloadType[message.payloadType] as any
+          payloadType: eventName
         },
         clientMsgId: msg.clientMsgId
       };
@@ -104,9 +105,10 @@ export function heartbeatEvent(id: string): SpotwareMessageEvent {
   const wrapper = clients.get(id);
   if (wrapper) {
     const payloadType = ProtoPayloadType.HEARTBEAT_EVENT;
+    const eventName = "HEARTBEAT_EVENT";
     const payload: IProtoHeartbeatEvent = { payloadType };
     const clientMsgId = CONFIG.clientMsgId();
-    const message = toProtoMessage("HEARTBEAT_EVENT", payload, clientMsgId);
+    const message = toProtoMessage(eventName, payload, clientMsgId);
     writeProtoMessage(wrapper.socket, message);
     const event: SpotwareMessageEvent = {
       type: "SpotwareMessageEvent",
@@ -114,7 +116,7 @@ export function heartbeatEvent(id: string): SpotwareMessageEvent {
       payloadType,
       payload: {
         ...payload,
-        payloadType: ProtoPayloadType[ProtoPayloadType.HEARTBEAT_EVENT] as any
+        payloadType: eventName
       },
       clientMsgId
     };
@@ -129,12 +131,9 @@ export function openApiVersionReq(id: string): SpotwareMessageEvent {
   if (wrapper) {
     const payloadType = ProtoOAPayloadType.PROTO_OA_VERSION_REQ;
     const payload: IProtoOAVersionReq = { payloadType };
+    const eventName = "PROTO_OA_VERSION_REQ";
     const clientMsgId = CONFIG.clientMsgId();
-    const message = toProtoMessage(
-      "PROTO_OA_VERSION_REQ",
-      payload,
-      clientMsgId
-    );
+    const message = toProtoMessage(eventName, payload, clientMsgId);
     writeProtoMessage(wrapper.socket, message);
     const event: SpotwareMessageEvent = {
       type: "SpotwareMessageEvent",
@@ -142,9 +141,7 @@ export function openApiVersionReq(id: string): SpotwareMessageEvent {
       payloadType,
       payload: {
         ...payload,
-        payloadType: ProtoOAPayloadType[
-          ProtoOAPayloadType.PROTO_OA_VERSION_REQ
-        ] as any
+        payloadType: eventName
       },
       clientMsgId
     };
