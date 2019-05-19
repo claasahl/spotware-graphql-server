@@ -8,7 +8,9 @@ import {
 import {
   IProtoMessage,
   ProtoOAPayloadType,
-  ProtoPayloadType
+  ProtoPayloadType,
+  IProtoHeartbeatEvent,
+  IProtoOAVersionReq
 } from "@claasahl/spotware-adapter/build/spotware-messages";
 import {
   ConnectEvent,
@@ -46,7 +48,10 @@ function handleProtoMessage(
         type: "SpotwareMessageEvent",
         session: id,
         payloadType: message.payloadType,
-        payload: undefined,
+        payload: {
+          ...msg.message,
+          payloadType: ProtoOAPayloadType[message.payloadType] as any
+        },
         clientMsgId: msg.clientMsgId
       };
       publish(event);
@@ -99,7 +104,7 @@ export function heartbeatEvent(id: string): SpotwareMessageEvent {
   const wrapper = clients.get(id);
   if (wrapper) {
     const payloadType = ProtoPayloadType.HEARTBEAT_EVENT;
-    const payload = { payloadType: null };
+    const payload: IProtoHeartbeatEvent = { payloadType };
     const clientMsgId = CONFIG.clientMsgId();
     const message = toProtoMessage("HEARTBEAT_EVENT", payload, clientMsgId);
     writeProtoMessage(wrapper.socket, message);
@@ -107,7 +112,10 @@ export function heartbeatEvent(id: string): SpotwareMessageEvent {
       type: "SpotwareMessageEvent",
       session: id,
       payloadType,
-      payload,
+      payload: {
+        ...payload,
+        payloadType: ProtoPayloadType[ProtoPayloadType.HEARTBEAT_EVENT] as any
+      },
       clientMsgId
     };
     publish(event);
@@ -120,7 +128,7 @@ export function openApiVersionReq(id: string): SpotwareMessageEvent {
   const wrapper = clients.get(id);
   if (wrapper) {
     const payloadType = ProtoOAPayloadType.PROTO_OA_VERSION_REQ;
-    const payload = { payloadType: null };
+    const payload: IProtoOAVersionReq = { payloadType };
     const clientMsgId = CONFIG.clientMsgId();
     const message = toProtoMessage(
       "PROTO_OA_VERSION_REQ",
@@ -132,7 +140,12 @@ export function openApiVersionReq(id: string): SpotwareMessageEvent {
       type: "SpotwareMessageEvent",
       session: id,
       payloadType,
-      payload,
+      payload: {
+        ...payload,
+        payloadType: ProtoOAPayloadType[
+          ProtoOAPayloadType.PROTO_OA_VERSION_REQ
+        ] as any
+      },
       clientMsgId
     };
     publish(event);
