@@ -23,29 +23,32 @@ export default resolvers;
 }
 
 const typeNames: string[] = [];
+const messageTypeNames: string[] = [];
 types.commonMessages.types.forEach((value, key) => {
-  typeNames.push(typeName(key));
-  const filename = typeName(key) + ".ts";
+  const name = typeName(key);
+  typeNames.push(name);
+  messageTypeNames.push(name);
   const content = resolver(key, value);
-  fs.writeFileSync("./src/generated/resolvers/" + filename, content);
+  fs.writeFileSync(`./src/generated/resolvers/${name}.ts`, content);
 });
 types.commonModelMessages.types.forEach((value, key) => {
-  typeNames.push(typeName(key));
-  const filename = typeName(key) + ".ts";
+  const name = typeName(key);
+  typeNames.push(name);
   const content = resolver(key, value);
-  fs.writeFileSync("./src/generated/resolvers/" + filename, content);
+  fs.writeFileSync(`./src/generated/resolvers/${name}.ts`, content);
 });
 types.messages.types.forEach((value, key) => {
-  typeNames.push(typeName(key));
-  const filename = typeName(key) + ".ts";
+  const name = typeName(key);
+  typeNames.push(name);
+  messageTypeNames.push(name);
   const content = resolver(key, value);
-  fs.writeFileSync("./src/generated/resolvers/" + filename, content);
+  fs.writeFileSync(`./src/generated/resolvers/${name}.ts`, content);
 });
 types.modelMessages.types.forEach((value, key) => {
-  typeNames.push(typeName(key));
-  const filename = typeName(key) + ".ts";
+  const name = typeName(key);
+  typeNames.push(name);
   const content = resolver(key, value);
-  fs.writeFileSync("./src/generated/resolvers/" + filename, content);
+  fs.writeFileSync(`./src/generated/resolvers/${name}.ts`, content);
 });
 
 const importsStatements = typeNames.map(
@@ -58,3 +61,8 @@ const resolvers = {
 }
 export default resolvers;`;
 fs.writeFileSync("./src/generated/resolvers/index.ts", content);
+
+const payloadType = `union Payload =
+  | ${messageTypeNames.join("\n  | ")}
+`;
+fs.writeFileSync("./src/generated/schema/payload.graphql", payloadType);
