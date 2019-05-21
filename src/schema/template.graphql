@@ -1,3 +1,4 @@
+# Write your query or mutation here
 subscription EVENTS {
   events {
     __typename
@@ -22,9 +23,15 @@ subscription EVENTS {
       payloadType
       payload {
         __typename
+        ... on OpenApiVersionReq {
+          OpenApiVersionReq: payloadType
+        }
         ... on OpenApiVersionRes {
-          payloadType
+          OpenApiVersionRes: payloadType
           version
+        }
+        ... on HeartbeatEvent {
+          HeartbeatEvent: payloadType
         }
       }
       clientMsgId
