@@ -79,3 +79,15 @@ schema("commonMessages.graphql", types.commonMessages);
 schema("commonModelMessages.graphql", types.commonModelMessages);
 schema("messages.graphql", types.messages);
 schema("modelMessages.graphql", types.modelMessages);
+
+const typeNames: string[] = [];
+types.commonMessages.types.forEach((_value, key) => {
+  typeNames.push(typeName(key));
+});
+types.messages.types.forEach((_value, key) => {
+  typeNames.push(typeName(key));
+});
+const payloadType = `union Payload =
+  | ${typeNames.join("\n  | ")}
+`;
+fs.writeFileSync("./src/generated/schema/payload.graphql", payloadType);
