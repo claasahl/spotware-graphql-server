@@ -9,9 +9,6 @@ const resolvers: MutationResolvers = {
   disconnect: (_parent, _args, { sessionId, clients }) => {
     return clients.disconnect(sessionId);
   },
-  heartbeatEvent: (_parent, _args, { sessionId, clients }) => {
-    return clients.heartbeatEvent(sessionId);
-  },
   openApiVersionReq: (_parent, _args, { sessionId, clients }) => {
     return clients.openApiVersionReq(sessionId);
   }

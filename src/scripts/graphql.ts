@@ -81,13 +81,37 @@ schema("messages.graphql", types.messages);
 schema("modelMessages.graphql", types.modelMessages);
 
 const typeNames: string[] = [];
-types.commonMessages.types.forEach((_value, key) => {
+const mutations: { name: string; type: IType }[] = [];
+types.commonMessages.types.forEach((value, key) => {
   typeNames.push(typeName(key));
+  mutations.push({ name: typeName(key, false), type: value });
 });
-types.messages.types.forEach((_value, key) => {
+types.messages.types.forEach((value, key) => {
   typeNames.push(typeName(key));
+  mutations.push({ name: typeName(key, false), type: value });
 });
 const payloadType = `union Payload =
   | ${typeNames.join("\n  | ")}
 `;
 fs.writeFileSync("./src/generated/schema/payload.graphql", payloadType);
+
+const mutationType = `type Mutation {
+  ${mutations
+    .filter(({ name }) => name.endsWith("Req"))
+    .map(entry => justdoit(entry.name, entry.type))
+    .join("\n  ")}
+}  
+`;
+fs.writeFileSync("./src/generated/schema/mutation.graphql", mutationType);
+
+function justdoit(name: string, type: IType): string {
+  const fields: string[] = [];
+  for (const fieldname in type.fields) {
+    const field = type.fields[fieldname];
+    fields.push(`${fieldname}: ${graphqlType(field)}`);
+  }
+  if (fields.length > 0) {
+    return `${name}(${fields.join(", ")}): SpotwareMessageEvent!`;
+  }
+  return `${name}: SpotwareMessageEvent!`;
+}

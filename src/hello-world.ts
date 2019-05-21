@@ -27,6 +27,7 @@ const typeDefs = () => {
     "./src/generated/schema/modelMessages.graphql"
   );
   const payload = fs.readFileSync("./src/generated/schema/payload.graphql");
+  const requests = fs.readFileSync("./src/generated/schema/mutation.graphql");
   const subscription = fs.readFileSync("./src/schema/Subscription.graphql");
   const mutation = fs.readFileSync("./src/schema/mutation.graphql");
   return [
@@ -37,7 +38,8 @@ const typeDefs = () => {
     commonModelMessages.toString(),
     messages.toString(),
     modelMessages.toString(),
-    payload.toString()
+    payload.toString(),
+    requests.toString()
   ];
 };
 
