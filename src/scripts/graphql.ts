@@ -81,14 +81,14 @@ schema("messages.graphql", types.messages);
 schema("modelMessages.graphql", types.modelMessages);
 
 const typeNames: string[] = [];
-const mutations: { name: string; type: IType }[] = [];
+const mutations: { name: string; typename: string; type: IType }[] = [];
 types.commonMessages.types.forEach((value, key) => {
   typeNames.push(typeName(key));
-  mutations.push({ name: typeName(key, false), type: value });
+  mutations.push({ name: typeName(key, false), typename: key, type: value });
 });
 types.messages.types.forEach((value, key) => {
   typeNames.push(typeName(key));
-  mutations.push({ name: typeName(key, false), type: value });
+  mutations.push({ name: typeName(key, false), typename: key, type: value });
 });
 const payloadType = `union Payload =
   | ${typeNames.join("\n  | ")}
@@ -98,18 +98,51 @@ fs.writeFileSync("./src/generated/schema/payload.graphql", payloadType);
 const mutationType = `type Mutation {
   ${mutations
     .filter(({ name }) => name.endsWith("Req"))
-    .map(entry => justdoit(entry.name, entry.type))
+    .map(entry => justdoit(entry.name, entry.typename, entry.type))
     .join("\n  ")}
 }  
 `;
 fs.writeFileSync("./src/generated/schema/mutation.graphql", mutationType);
 
-function justdoit(name: string, type: IType): string {
+function justdoit(name: string, typename: string, type: IType): string {
+  var IPayloadType = "????";
   const fields: string[] = [];
   for (const fieldname in type.fields) {
     const field = type.fields[fieldname];
-    fields.push(`${fieldname}: ${graphqlType(field)}`);
+    if (fieldname !== "payloadType") {
+      fields.push(`${fieldname}: ${graphqlType(field)}`);
+    } else if (field.options) {
+      IPayloadType = field.options.default;
+    }
   }
+  const IProtoType = "I" + typename;
+  // console.log(`export function ${name}(id: string, payload: ${IProtoType}): SpotwareMessageEvent {
+  //   const wrapper = clients.get(id);
+  //   if (wrapper) {
+  //     const payloadType = ProtoOAPayloadType.${IPayloadType};
+  //     const eventName = "${IPayloadType}";
+  //     const clientMsgId = CONFIG.clientMsgId();
+  //     const message = toProtoMessage(eventName, {...payload, payloadType }, clientMsgId);
+  //     writeProtoMessage(wrapper.socket, message);
+  //     const event: SpotwareMessageEvent = {
+  //       type: "SpotwareMessageEvent",
+  //       session: id,
+  //       payloadType,
+  //       payload: {
+  //         ...payload,
+  //         payloadType: eventName
+  //       },
+  //       clientMsgId
+  //     };
+  //     publish(event);
+  //     return event;
+  //   }
+  //   throw new Error(\`no client for id \$\{id\}\`);
+  // }
+  // `);
+  console.log(`  ${name}: (_parent, args, { sessionId, clients }) => {
+    return clients.${name}(sessionId, args);
+  },`);
   if (fields.length > 0) {
     return `${name}(${fields.join(", ")}): SpotwareMessageEvent!`;
   }
