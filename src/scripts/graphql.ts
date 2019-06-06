@@ -8,11 +8,13 @@ function graphqlBaseType(field: IField): string {
   switch (field.type) {
     case "uint64":
     case "int64":
+    case "uint32":
+      return "Long";
     case "double":
+      return "Float";
     case "string":
     case "bytes":
       return "String";
-    case "uint32":
     case "int32":
       return "Int";
     case "bool":
@@ -28,7 +30,7 @@ function graphqlType(field: IField): string {
     case undefined:
       return baseType;
     case "repeated":
-      return "[" + baseType + "!]!";
+      return "[" + baseType + "!]";
     case "required":
       return baseType + "!";
     default:

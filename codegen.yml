@@ -12,3 +12,5 @@ generates:
       immutableTypes: true
       enumsAsTypes: true
       maybeValue: T | null | undefined
+      scalars:
+        Long: Long
